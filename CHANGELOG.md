@@ -1,6 +1,13 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/sanctum/compare/v4.0.2...4.x)
+## [Unreleased](https://github.com/laravel/sanctum/compare/v4.0.3...4.x)
+
+## [v4.0.3](https://github.com/laravel/sanctum/compare/v4.0.2...v4.0.3) - 2024-09-27
+
+* Fix: Cast Model Key to Integer for PostgreSQL Performance Improvement by [@BakhadyrovF](https://github.com/BakhadyrovF) in https://github.com/laravel/sanctum/pull/524
+* Revert "Fix: Cast Model Key to Integer for PostgreSQL Performance Improvement" by [@driesvints](https://github.com/driesvints) in https://github.com/laravel/sanctum/pull/526
+* Replace dead link in Security Policy by [@Jubeki](https://github.com/Jubeki) in https://github.com/laravel/sanctum/pull/528
+* Update logo to support dark/light theme by [@milewski](https://github.com/milewski) in https://github.com/laravel/sanctum/pull/536
 
 ## [v4.0.2](https://github.com/laravel/sanctum/compare/v4.0.1...v4.0.2) - 2024-04-10
 
