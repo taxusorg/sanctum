@@ -53,6 +53,44 @@ class GuardTest extends TestCase
         $this->assertTrue($user->tokenCan('foo'));
     }
 
+    public function test_authentication_is_attempted_with_given_guard()
+    {
+        $factory = Mockery::mock(AuthFactory::class);
+
+        $guard = new Guard($factory, null, 'users', ['other']);
+
+        $webGuard = Mockery::mock(stdClass::class);
+        $otherGuard = Mockery::mock(stdClass::class);
+
+        $factory->shouldReceive('guard')
+            ->with('web')
+            ->andReturn($webGuard);
+        $factory->shouldReceive('guard')
+            ->with('other')
+            ->andReturn($otherGuard);
+
+        $webGuard->shouldReceive('user')->never();
+        $otherGuard->shouldReceive('user')->once()->andReturn($fakeUser = new User);
+
+        $user = $guard->__invoke(Request::create('/', 'GET'));
+
+        $this->assertSame($user, $fakeUser);
+        $this->assertTrue($user->tokenCan('foo'));
+    }
+
+    public function test_authentication_ignore_all_guard()
+    {
+        $factory = Mockery::mock(AuthFactory::class);
+
+        $guard = new Guard($factory, null, 'users', []);
+
+        $factory->shouldReceive('guard')->never();
+
+        $user = $guard->__invoke(Request::create('/', 'GET'));
+
+        $this->assertNull($user);
+    }
+
     public function test_authentication_is_attempted_with_token_if_no_session_present()
     {
         $factory = Mockery::mock(AuthFactory::class);

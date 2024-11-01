@@ -17,6 +17,13 @@ class Guard
     protected $auth;
 
     /**
+     * guards will be checked.
+     *
+     * @var string|string[]|null
+     */
+    protected $guards;
+
+    /**
      * The number of minutes tokens should be allowed to remain valid.
      *
      * @var int
@@ -36,13 +43,15 @@ class Guard
      * @param  \Illuminate\Contracts\Auth\Factory  $auth
      * @param  int  $expiration
      * @param  string  $provider
+     * @param  string|string[]|null  $guards
      * @return void
      */
-    public function __construct(AuthFactory $auth, $expiration = null, $provider = null)
+    public function __construct(AuthFactory $auth, $expiration = null, $provider = null, $guards = null)
     {
         $this->auth = $auth;
         $this->expiration = $expiration;
         $this->provider = $provider;
+        $this->guards = $guards;
     }
 
     /**
@@ -53,7 +62,7 @@ class Guard
      */
     public function __invoke(Request $request)
     {
-        foreach (Arr::wrap(config('sanctum.guard', 'web')) as $guard) {
+        foreach (Arr::wrap($this->guards ?? config('sanctum.guard', 'web')) as $guard) {
             if ($user = $this->auth->guard($guard)->user()) {
                 return $this->supportsTokens($user)
                     ? $user->withAccessToken(new TransientToken)
